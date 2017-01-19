@@ -28,11 +28,12 @@ Now the important step of patching the libwpa2.a:
 
 Then go to your esp_peap_psk and adjust the BUILD_AREA variable in the Makefile. Enter the corrct network names, passwords and credentials in user/user_config.h.
 
-Build the esp_peap_psk firmware with "make". It will use the patched. libwpa3.a "make flash" flashes it onto an esp8266.
+Build the esp_peap_psk firmware with "make". It will use the patched. libwpa3.a "make flash" flashes it onto an ESP8266.
 
 I know this is a ugly hack - but I am not aware of another option as long as the sdk offers no API for setting the outer identification.
 
 # Usage
-Go to your office, plug it in and check via serial terminal (115200 baud) whether it connects (status LED also stopps flashing). If so,you are done and it will offer its own WPA-PSK network as SoftAP where you can connect e.g. with other esp8266 IoT devices. As usual on the esp clients are configured via DHCP in the network 192.168.4.0/24 starting from 192.168.4.2. Max 8 clients are supported by the esp. They receive the DNS server address from the enterprise network.
+Go to your office, start it up and check via serial terminal (115200 baud) whether it connects (status LED also stopps flashing). If so, you are done and it will offer its own WPA-PSK network as SoftAP where you can connect e.g. with other ESP8266 IoT devices. As usual on the esp clients are configured via DHCP in the network 192.168.4.0/24 starting from 192.168.4.2. Max 8 clients are supported by the esp. They receive the DNS server address from the enterprise network.
 
-Be aware of the fact that the esp now contains your enterprise network password. While there is no user interface function to read it, it can be read from the flash in plain text. Do not leave your esp unattended - at least if anybody else knows, what is does... ;-)
+# Security
+Be aware of the fact that the ESP8266 now contains your enterprise network password. All traffic that is forwarded by it can now be related by the network admin to your account. Do not missuse it and offer it to untrusted others, eg. by configuring an open network. And while there is no user interface function to read your enterprise network password on ESP8266, it can be extracted from the flash in plain text. Do not leave your ESP unattended - at least if anybody else knows, what is does... ;-)
