@@ -25,6 +25,11 @@ void wifi_handle_event_cb(System_Event_t *evt)
                 evt->event_info.connected.ssid,
                 evt->event_info.connected.channel);
 	    once_connected = true;
+
+	    wifi_station_clear_enterprise_identity();
+	    wifi_station_clear_enterprise_username();
+	    wifi_station_clear_enterprise_password();
+
             break;
         case EVENT_STAMODE_DISCONNECTED:
             os_printf("[disconnect from ssid %s, reason %d]\n",
@@ -58,9 +63,6 @@ void wifi_handle_event_cb(System_Event_t *evt)
 	    dns_ip = dns_getserver(0);
 	    dhcps_set_DNS(&dns_ip);
 
-            break;
-
-	case EVENT_SOFTAPMODE_STACONNECTED:
 	    nif = netif_list;
 	    if (nif->num == 1) {
 		nif->napt = 1;
@@ -68,6 +70,10 @@ void wifi_handle_event_cb(System_Event_t *evt)
 	    } else 
 	        os_printf("AP-Interface not found\r\n");
 	    break;
+
+            break;
+
+	case EVENT_SOFTAPMODE_STACONNECTED:
 
 	case EVENT_SOFTAPMODE_STADISCONNECTED:
 	    break;
@@ -84,9 +90,9 @@ void ICACHE_FLASH_ATTR user_init(void)
     gpio_init();
 
     uart_div_modify(0, UART_CLK_FREQ/115200);
-    os_delay_us(1000000);
+    os_delay_us(0xffff);
 
-    wifi_status_led_install(WIFI_LED_IO_NUM, WIFI_LED_IO_MUX, FUNC_GPIO0); 
+   // wifi_status_led_install(WIFI_LED_IO_NUM, WIFI_LED_IO_MUX, FUNC_GPIO0); 
 
     os_printf("\r\n[SDK version:%s]\n", system_get_sdk_version());
 
@@ -100,7 +106,9 @@ void ICACHE_FLASH_ATTR user_init(void)
     apConfig.authmode = AUTH_WPA_WPA2_PSK;
     apConfig.ssid_len = 0;// or its actual length
     apConfig.max_connection = MAX_CLIENTS;
- 
+
+    os_printf("Free mem: %d\r\n", system_get_free_heap_size());
+
     wifi_softap_set_config(&apConfig);
 
     // first station mode: 
@@ -111,18 +119,21 @@ void ICACHE_FLASH_ATTR user_init(void)
     os_printf("Starting STA\r\n");
     // set station configuration, save to flash
     os_memset(&wifi_config,0,sizeof(wifi_config));
-    os_strcpy(wifi_config.ssid, WIFI_SSID, os_strlen(WIFI_SSID));
-    os_strcpy(wifi_config.password, WIFI_PASSWORD, WIFI_PASSWORD);
+    os_strcpy(wifi_config.ssid, WIFI_SSID);
+    os_strcpy(wifi_config.password, WIFI_PASSWORD);
     wifi_station_set_config(&wifi_config);
+    wifi_station_set_auto_connect(1);
 
     // WPA2-Enterprise
     wifi_station_set_wpa2_enterprise_auth(1);
     // ignore CA Certificate for now
     //wifi_station_set_enterprise_ca_cert(ca_pem, ca_pem_len + 1);
-    wifi_station_set_enterprise_username(EDUROAM_ID, os_strlen(EDUROAM_ID));
+    wifi_station_set_enterprise_identity(EDUROAM_IDENTITY, os_strlen(EDUROAM_IDENTITY));
+    wifi_station_set_enterprise_username(EDUROAM_USERNAME, os_strlen(EDUROAM_USERNAME));
     wifi_station_set_enterprise_password(EDUROAM_PW, os_strlen(EDUROAM_PW));
 
     wifi_station_connect();
 
     wifi_set_event_handler_cb(wifi_handle_event_cb);
 }
+

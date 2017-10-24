@@ -11,7 +11,8 @@
 #define WIFI_AP_SSID         "WPA-PSK-NET"
 #define WIFI_AP_PASSWORD     "password123"
 
-#define EDUROAM_ID	     "user1@uni1.edu"
+#define EDUROAM_IDENTITY     "user1@uni1.edu"
+#define EDUROAM_USERNAME     "user1"
 #define EDUROAM_PW	     "good_password123"
 
 #define MAX_CLIENTS	     8

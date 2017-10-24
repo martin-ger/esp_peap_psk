@@ -12,7 +12,7 @@
 # - 2014-11-23: Updated for SDK 0.9.3
 # - 2014-12-25: Replaced esptool by esptool.py
 
-BUILD_AREA = /home/martin/github
+BUILD_AREA = /home/mfg/github
 
 # Output directors to store intermediate compiled files
 # relative to the project directory
@@ -34,17 +34,17 @@ TARGET		= app
 
 # which modules (subdirectories) of the project to include in compiling
 MODULES		= driver user
-EXTRA_INCDIR    = $(BUILD_AREA)/esp-open-sdk/esp-open-lwip/include include
+EXTRA_INCDIR    = include $(BUILD_AREA)/esp-open-sdk/esp-open-lwip/include
 #EXTRA_INCDIR    = include
 
 # libraries used in this project, mainly provided by the SDK
-LIBS		= c gcc hal pp phy net80211 lwip_open wpa main wpa3
+LIBS		= c gcc hal pp phy net80211 lwip_open_napt wpa main wpa2 
 
 # compiler flags using during compilation of source files
 CFLAGS		= -Os -g -O2 -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH -DLWIP_OPEN_SRC
 
 # linker flags used to generate the main object file
-LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static
+LDFLAGS		= -L. -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static
 
 # linker script used for the above linkier step
 LD_SCRIPT	= eagle.app.v6.ld

@@ -9,28 +9,14 @@ What is very helpful is a "converter" that logs into the WPA2 Enterprise network
 
 Togehter with  my "nat" branch of the esp-open-lwip library (https://github.com/martin-ger/esp-open-lwip/tree/nat) this minimal app provides such a converter. It again acts as a WiFi NAT router like the esp_wifi_repeater (https://github.com/martin-ger/esp_wifi_repeater), but is is much simpler and has no user interface. Once compiled it is just plug-and-pray! ;-)
 
-All configuration has to be done at compile time. This is not a bug, but a necessity, as the so called "outer identification" has to be patched into the binary libwpa2.a. Ugly, but the only known way to get WPA2-PEAP connectivity (at least with a PEAP-network with many realms (RADIUS servers) like the eduroam).
+All configuration has to be done at compile time. 
 
 # Building
-To build this binary you have to download and install the esp-open-sdk (https://github.com/pfalcon/esp-open-sdk) and my "nat" branch of the esp-open-lwip library (https://github.com/martin-ger/esp-open-lwip/tree/nat). The easiest way to get it is to download:
-https://github.com/martin-ger/esp-open-lwip/archive/nat.zip . Unpack and replace that in the esp-open-sdk tree. "make clean" in the esp_open_lwip dir and once again a "make" in the upper esp_open_sdk will do the job. This installs a new version of the liblwip_open.a that contains the NAT-features.
+To build this binary you download and install the esp-open-sdk version 2.1(!) (https://github.com/pfalcon/esp-open-sdk). Make sure, you can compile and download the included "blinky" example.
 
-Now the important step of patching the libwpa2.a:
-- install hexedit (or another tool that can do binary editing)
-- cd to your esp_open_sdk directory
-- cd sdk/lib/
-- cp libwpa2.a libwpa3.a
-- hexedit libwpa3.a
-- search (by typing tab and then "/") for "anonymous@espressif.com"
-- overwrite it with your username, e.g. "user1@uni1.edu", fill the remaining bytes of the original string with 00 (by switching back to hex mode with tab)
-- if your username is longer than "anonymous@espressif.com" use a fake username, but the correct domain. (e.g. "anon@uni1.edu" instead of "student01928.computerscience@uni1.edu"). Should work as well. This string is only important for routing the following authentication protocol to the correct RADIUS server.
-- once you have done the patching, save the libwpa3.a 
+Then download this source tree in a separate directory and adjust the BUILD_AREA variable in the Makefile and the settings and user credentials in user/user_config.h. Build the esp_peap_psk firmware with "make". "make flash" flashes it onto an esp8266.
 
-Then go to your esp_peap_psk and adjust the BUILD_AREA variable in the Makefile. Enter the corrct network names, passwords and credentials in user/user_config.h.
-
-Build the esp_peap_psk firmware with "make". It will use the patched. libwpa3.a "make flash" flashes it onto an ESP8266.
-
-I know this is a ugly hack - but I am not aware of another option as long as the sdk offers no API for setting the outer identification.
+The source tree includes a binary version of the liblwip_open plus the required additional includes from my fork of esp-open-lwip. *No additional install action is required for that.* Only if you don't want to use the precompiled library, checkout the sources from https://github.com/martin-ger/esp-open-lwip . Use it to replace the directory "esp-open-lwip" in the esp-open-sdk tree. "make clean" in the esp_open_lwip dir and once again a "make" in the upper esp_open_sdk directory. This will compile a liblwip_open.a that contains the NAT-features. Replace liblwip_open_napt.a with that binary.
 
 # Usage
 Go to your office, start it up and check via serial terminal (115200 baud) whether it connects (status LED also stopps flashing). If so, you are done and it will offer its own WPA-PSK network as SoftAP where you can connect e.g. with other ESP8266 IoT devices. As usual on the esp clients are configured via DHCP in the network 192.168.4.0/24 starting from 192.168.4.2. Max 8 clients are supported by the esp. They receive the DNS server address from the enterprise network.
