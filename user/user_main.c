@@ -92,7 +92,8 @@ void ICACHE_FLASH_ATTR user_init(void)
     uart_div_modify(0, UART_CLK_FREQ/115200);
     os_delay_us(0xffff);
 
-   // wifi_status_led_install(WIFI_LED_IO_NUM, WIFI_LED_IO_MUX, FUNC_GPIO0); 
+    wifi_status_led_install (2, PERIPHS_IO_MUX_GPIO2_U, FUNC_GPIO2);
+    //wifi_status_led_install(WIFI_LED_IO_NUM, WIFI_LED_IO_MUX, FUNC_GPIO0); 
 
     os_printf("\r\n[SDK version:%s]\n", system_get_sdk_version());
 
