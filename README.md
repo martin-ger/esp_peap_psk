@@ -3,13 +3,11 @@ A WPA2-PEAP to WPA2-PSK converter
 
 Connect your IoT devices to the Internet via an WPA2-PEAP Enterprise network.
 
-This small application of the ESP8266 solves a common problem especially in university environments: the local WiFi network is a WPA2 Enterprise network with PEAP-MSCHAPv2 authentication. A very prominent example is the "eduroam"-network that is available at many universities around the world. The problem is, that many IoT devices cannot handle WPA2 Enterprise authentication. So development and demos are difficult. Also the ESP8266 has a lot of problems getting a connect here. Thanks to https://github.com/joostd/esp8266-eduroam/tree/master/wpa2e-v20 we have at least a template for that.
+This small application of the ESP8266 solves a common problem especially in university environments: the local WiFi network is a WPA2 Enterprise network with PEAP-MSCHAPv2 authentication. A very prominent example is the "eduroam"-network that is available at many universities around the world. The problem is, that many IoT devices cannot handle WPA2 Enterprise authentication. So development and demos are difficult. What is very helpful is a "converter" that logs into the WPA2 Enterprise network and offers a simpler WPA-PSK network to its clients.
 
-What is very helpful is a "converter" that logs into the WPA2 Enterprise network and offers a simpler WPA-PSK network to its clients.
+Togehter with  my "nat" versio of the esp-open-lwip library this minimal app provides such a converter. It again acts as a WiFi NAT router like the esp_wifi_repeater (https://github.com/martin-ger/esp_wifi_repeater), but is is much simpler and has no user interface. Once compiled it is just plug-and-pray! ;-)
 
-Togehter with  my "nat" branch of the esp-open-lwip library (https://github.com/martin-ger/esp-open-lwip/tree/nat) this minimal app provides such a converter. It again acts as a WiFi NAT router like the esp_wifi_repeater (https://github.com/martin-ger/esp_wifi_repeater), but is is much simpler and has no user interface. Once compiled it is just plug-and-pray! ;-)
-
-All configuration has to be done at compile time. 
+All configuration has to be done at compile time in user/user_config.h.
 
 # Building
 To build this binary you download and install the esp-open-sdk version 2.1(!) (https://github.com/pfalcon/esp-open-sdk). Make sure, you can compile and download the included "blinky" example.
