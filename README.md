@@ -10,7 +10,7 @@ Togehter with  my "nat" versio of the esp-open-lwip library this minimal app pro
 All configuration has to be done at compile time in user/user_config.h.
 
 # Building
-To build this binary you download and install the esp-open-sdk version 2.1(!) (https://github.com/pfalcon/esp-open-sdk). Make sure, you can compile and download the included "blinky" example.
+To build this binary you download and install the esp-open-sdk with the lastest version of the NONOS SDK - version 2.1.0(!) (see https://github.com/pfalcon/esp-open-sdk and adjust the Makefile accordingly). Make sure, you can compile and download the included "blinky" example.
 
 Then download this source tree in a separate directory and adjust the BUILD_AREA variable in the Makefile and the settings and user credentials in user/user_config.h. Build the esp_peap_psk firmware with "make". "make flash" flashes it onto an esp8266.
 
