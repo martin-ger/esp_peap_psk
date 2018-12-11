@@ -1,3 +1,5 @@
+Obsolete: has now been integrated in the esp_wifi_repeater (https://github.com/martin-ger/esp_wifi_repeater )
+
 # esp_peap_psk
 A WPA2-PEAP to WPA2-PSK converter
 
